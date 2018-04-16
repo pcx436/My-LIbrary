@@ -11,8 +11,8 @@ All code was developed using Python 2.7. You may run it using the `Python exampl
 ### C++
 
 All code was developed according to the C++ 2011 standard. Pretty much all assignments and recitation activities should have a “main.out” or other primary executable file to see the activity run. If you want to compile it from scratch, you may use:
-* `g++ -std=c++11 *.cpp` for non CodeBlocks projects
-* `g++ -std=c++11 -I include/ src/*.cpp *.cpp` for CodeBlocks projects
+* `g++ -std=c++11 *.cpp` for non CodeBlocks projects.
+* `g++ -std=c++11 -I include/ src/*.cpp *.cpp` for CodeBlocks projects.
 
 ## About the Author
 
