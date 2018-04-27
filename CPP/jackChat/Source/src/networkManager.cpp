@@ -154,31 +154,19 @@ networkManager::~networkManager()
     //dtor
 }
 
-bool networkManager::amIHost()
-{
-    return isHost;
-}
+bool networkManager::amIHost(){ return isHost; }
 
-string networkManager::getIP()
-{
-    return IP;
-}
+string networkManager::getIP(){ return IP; }
 
-string networkManager::getName()
-{
-    return userName;
-}
+string networkManager::getName(){ return userName; }
 
-bool networkManager::connectionOpen()
-{
-    return openConnection;
-}
+bool networkManager::connectionOpen(){ return openConnection; }
 
-bool networkManager::setIP(string newIP)
+bool networkManager::setIP(string IP)
 {
     if(!openConnection && cSocket == -1 && nSocket == -1)
     {
-        IP = newIP;
+        this->IP = IP;
         return true;
     }
     return false;
@@ -194,6 +182,7 @@ bool networkManager::setName(string newName)
     return false;
 }
 
+// Checks if a provided IP address is a valid IPv4 address.
 string networkManager::validIP(string ip)
 {
     //Check length requirements
@@ -204,6 +193,7 @@ string networkManager::validIP(string ip)
 
     int octNum = 0;
     string ret = "Bad character \"";
+
     //Check the string for characters that aren't numbers and '.'. Will also count '.'
     for(int i = 0; i < (int)ip.length(); i++)
         if(ip[i] != '.' && (ip[i] < '0' || ip[i] > '9'))
@@ -241,6 +231,7 @@ string networkManager::validIP(string ip)
 
 }
 
+// used to write messages to a log file
 bool networkManager::writeMessages()
 {
     time_t t;

@@ -9,19 +9,20 @@ struct thread_stuffs
     networkManager * perroSocks;
 };
 
-void *listenThread(void *YEET)
+// Used in the multi-threading of the sending and receiving threads
+void *listenThread(void *threadContent)
 {
     pthread_detach(pthread_self());
     struct thread_stuffs *somestuff;
-    somestuff = (struct thread_stuffs *) YEET;
+    somestuff = (struct thread_stuffs *) threadContent;
     somestuff->perroSocks->listenr();
     pthread_exit(NULL);
 }
 
-void *sendThread(void *YEET)
+void *sendThread(void *threadContent)
 {
     struct thread_stuffs *somestuff;
-    somestuff = (struct thread_stuffs *) YEET;
+    somestuff = (struct thread_stuffs *) threadContent;
     somestuff->perroSocks->sender();
 
     pthread_exit(NULL);
@@ -47,11 +48,12 @@ int listIPs(int numOfIP)
 
 int main(void)
 {
+    // The debug boolean variable should be used for debugging purposes only.
+    // It will assume that the IP address you're hosting on or connecting to is 127.0.0.1
     bool debug = false, valIP = false;
     string info[3];
 
-    cout << "Welcome to jackChat! This is a simple TCP IP based chatting system." << endl;
-
+    cout << "Welcome to jackChat, a simple TCP IP based chatting system." << endl;
     do
     {
         cout << "Do you want to host?\n1) Yes\n2) No" << endl;
@@ -62,10 +64,10 @@ int main(void)
 
     } while(info[0] != "1" && info[0] != "2");
 
-    networkManager checker;
+    networkManager checker;// used to check entered IP addresses
     while(!valIP && !debug)
     {
-        if(info[0] == "1")
+        if(stoi(info[0]) == 1)
             cout << "What's your IP address?" << endl;
         else
             cout << "What IP do you want to connect to?" << endl;
@@ -122,6 +124,7 @@ int main(void)
         }
 
     }
+
     // Used in case you want to get around a lot of what's happening and just test core functionality.
     if(debug)
     {
@@ -136,7 +139,7 @@ int main(void)
     //Getting username.
     do
     {
-        cout << "What's your user-name going to be?\n";
+        cout << "What's your user-name going to be?" << endl;
         getline(cin, info[2]);
 
         if(info[2].empty())
@@ -146,22 +149,22 @@ int main(void)
     } while(info[2].empty() || info[2].length() > 1500);
 
     // Thread information creation
-    pthread_t horst;
-    pthread_t derek;
-    struct thread_stuffs tiffiny;
-    tiffiny.thread_id = 4;
-    tiffiny.perroSocks = new networkManager(info);
+    pthread_t forListenThread;
+    pthread_t forSendThread;
+    struct thread_stuffs threadInfo;
+    threadInfo.thread_id = 4;
+    threadInfo.perroSocks = new networkManager(info);
 
     // Thread creation
-    pthread_create(&horst, NULL, listenThread, (void *)&tiffiny);
-    pthread_create(&derek, NULL, sendThread, (void *)&tiffiny);
+    pthread_create(&forListenThread, NULL, listenThread, (void *)&threadInfo);
+    pthread_create(&forSendThread, NULL, sendThread, (void *)&threadInfo);
 
     // Thread joining
-    pthread_join(derek, NULL);
+    pthread_join(forSendThread, NULL);
 
     // Program ending maitnence
-    delete tiffiny.perroSocks;// Prevents memory leak
+    delete threadInfo.perroSocks;// Prevents memory leak
 
-    tiffiny.perroSocks = nullptr;
+    threadInfo.perroSocks = nullptr;
     return 0;
 }

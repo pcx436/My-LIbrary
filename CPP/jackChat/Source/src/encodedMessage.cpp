@@ -30,6 +30,7 @@ encodedMessage::~encodedMessage()
     //dtor
 }
 
+// Uses a ROT-13 cipher to encode and decode messages.
 bool encodedMessage::encode()
 {
     if (sent || !messageSet || encoded)
